@@ -4,10 +4,10 @@ echo FLX-Gaze One-Click Installer
 echo ============================================
 echo.
 
-cd gaze_correction_system
+set PROJECT_DIR=%~dp0
 
 echo [1/3] Installing Python packages...
-pip install -r requirements.txt
+pip install -r "%PROJECT_DIR%requirements.txt"
 if %errorlevel% neq 0 (
     echo ERROR: Failed to install packages
     pause
@@ -26,14 +26,16 @@ if %errorlevel% neq 0 (
 
 echo.
 echo [3/3] Verifying installation...
-python -c "import tensorflow, cv2, numpy, dlib; print('All packages OK')"
+python -c "import tensorflow, cv2, numpy; print('Core packages OK')"
+python -c "import dlib; print('dlib OK')" 2>nul || echo WARNING: dlib not available
 
 echo.
 echo ============================================
 echo Installation complete!
 echo.
 echo Next steps:
-echo   1. Calibrate camera: python auto_calibrate.py
-echo   2. Run system: python run.py
+echo   1. cd gaze_correction_system
+echo   2. python auto_calibrate.py
+echo   3. python run.py
 echo ============================================
 pause
