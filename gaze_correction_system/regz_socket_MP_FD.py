@@ -122,7 +122,7 @@ class VideoReceiver:
 
 
 class GazeRedirectionSystem:
-    def __init__(self, shared_v, lock):
+    def __init__(self, shared_v, lock, auto_mode=False):
         # Landmark identifier
         import dlib
         self.detector = dlib.get_frontal_face_detector()
@@ -159,7 +159,7 @@ class GazeRedirectionSystem:
             self.RE_input_ang, self.RE_phase_train, self.RE_img_pred = \
             self._load_model('R')
 
-        self.run(shared_v, lock)
+        self.run(shared_v, lock, auto_mode)
 
     def _load_model(self, eye):
         with tf1.Graph().as_default() as g:
@@ -460,9 +460,9 @@ class GazeRedirectionSystem:
         rg_thread.start()
         return True
 
-    def run(self, shared_v, lock):
+    def run(self, shared_v, lock, auto_mode=False):
         import dlib
-        redir = False
+        redir = auto_mode
         size_window = [659, 528]
         vs = cv2.VideoCapture(0)
         vs.set(3, size_video[0])
@@ -517,6 +517,16 @@ class GazeRedirectionSystem:
 
 
 if __name__ == '__main__':
+    auto_mode = '--auto' in sys.argv
+    
+    print("=" * 60)
+    print("FLX-Gaze: Eye Gaze Correction System")
+    print("=" * 60)
+    if auto_mode:
+        print("Auto mode: Gaze correction ON by default")
+    print("Press 'r' to toggle, 'q' to quit")
+    print("=" * 60)
+    
     l = mp.Lock()
     v = mp.Array('i', [320, 240])
 
@@ -525,7 +535,7 @@ if __name__ == '__main__':
     vs_thread.start()
     time.sleep(1)
 
-    gz_thread = mp.Process(target=GazeRedirectionSystem, args=(v, l))
+    gz_thread = mp.Process(target=GazeRedirectionSystem, args=(v, l, auto_mode))
     gz_thread.start()
 
     vs_thread.join()
