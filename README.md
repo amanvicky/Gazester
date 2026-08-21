@@ -21,9 +21,6 @@ author = {Hsu, Chih-Fan and Wang, Yu-Shuen and Lei, Chin-Laung and Chen, Kuan-Ta
  keywords = {Eye contact, convolutional neural network, gaze correction, <br />image processing, live video communication},<br />
 } <br />
 
-# Demo video on YouTube
-[![Look at Me! Correcting Eye Gaze in Live Video Communication](https://github.com/chihfanhsu/gaze_correction/blob/master/imgs/YouTube_page.PNG)](https://youtu.be/9nAHINph5a4)
-
 # System usage
 ```python
 python regz_socket_MP_FD.py
