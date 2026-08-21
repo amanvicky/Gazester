@@ -47,23 +47,20 @@ def conv2d(inputs, filters, kernel_size, name='conv2d'):
     with tf1.variable_scope(name):
         in_channels = inputs.shape[-1]
         shape = [kernel_size[0], kernel_size[1], in_channels, filters]
-        weights = tf1.get_variable('weights', shape,
-                                   initializer=tf1.glorot_uniform_initializer())
-        biases = tf1.get_variable('biases', [filters],
-                                  initializer=tf.zeros_initializer())
-        out = tf.nn.conv2d(inputs, weights, strides=[1, 1, 1, 1],
-                          padding='SAME')
-        return tf.nn.bias_add(out, biases)
+        kernel = tf1.get_variable('kernel', shape,
+                                  initializer=tf1.glorot_uniform_initializer())
+        return tf.nn.conv2d(inputs, kernel, strides=[1, 1, 1, 1],
+                            padding='SAME')
 
 
 def dense(inputs, units, name='dense'):
     with tf1.variable_scope(name):
         in_features = inputs.shape[-1]
-        weights = tf1.get_variable('weights', [in_features, units],
-                                   initializer=tf1.glorot_uniform_initializer())
-        biases = tf1.get_variable('biases', [units],
-                                  initializer=tf.zeros_initializer())
-        return tf.matmul(inputs, weights) + biases
+        kernel = tf1.get_variable('kernel', [in_features, units],
+                                  initializer=tf1.glorot_uniform_initializer())
+        bias = tf1.get_variable('bias', [units],
+                                initializer=tf.zeros_initializer())
+        return tf.matmul(inputs, kernel) + bias
 
 
 def cnn_blk(inputs, filters, kernel_size, phase_train, name='cnn_blk'):
