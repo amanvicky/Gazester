@@ -3,6 +3,7 @@
 """
 Automated setup script for FLX-Gaze system
 Installs all dependencies and verifies the installation
+Uses MediaPipe instead of dlib (no build tools needed)
 """
 
 import subprocess
@@ -73,6 +74,7 @@ def main():
         ("tensorflow>=2.15.0", "tensorflow"),
         ("opencv-python>=4.8.0", "cv2"),
         ("numpy>=1.24.0", "numpy"),
+        ("mediapipe>=0.10.9", "mediapipe"),
         ("scipy>=1.10.0", "scipy"),
     ]
 
@@ -82,29 +84,6 @@ def main():
         else:
             run_command(f"pip install {pkg}", f"Installing {pkg}")
 
-    # Install dlib (special handling)
-    print("\n" + "=" * 60)
-    print("Installing dlib...")
-    print("=" * 60)
-
-    if check_package("dlib"):
-        print("  [OK] dlib already installed")
-    else:
-        print("  dlib requires cmake and C++ build tools")
-        print("  Attempting installation...")
-
-        # Try to install cmake first
-        run_command("pip install cmake", "Installing cmake")
-
-        # Try to install dlib
-        success = run_command("pip install dlib", "Installing dlib")
-
-        if not success:
-            print("\n  dlib installation failed!")
-            print("  Please install manually:")
-            print("  1. Install Visual C++ Build Tools")
-            print("  2. Run: pip install cmake dlib")
-
     # Verify installation
     print("\n" + "=" * 60)
     print("Verifying installation...")
@@ -112,7 +91,7 @@ def main():
 
     all_ok = True
     for pkg, import_name in [("TensorFlow", "tensorflow"), ("OpenCV", "cv2"),
-                              ("NumPy", "numpy"), ("dlib", "dlib")]:
+                              ("NumPy", "numpy"), ("MediaPipe", "mediapipe")]:
         if check_package(import_name):
             try:
                 mod = __import__(import_name)
@@ -132,7 +111,6 @@ def main():
     required_files = [
         "weights/warping_model/flx/12/L/checkpoint",
         "weights/warping_model/flx/12/R/checkpoint",
-        "lm_feat/shape_predictor_68_face_landmarks.dat",
     ]
 
     for f in required_files:

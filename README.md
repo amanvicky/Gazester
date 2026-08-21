@@ -2,6 +2,8 @@
 
 Real-time eye gaze correction using warping-based convolutional neural network.
 
+Uses **MediaPipe** for face detection (cross-platform, no build tools needed).
+
 ## Quick Start (3 steps)
 
 ### Step 1: Install
@@ -21,7 +23,6 @@ chmod +x install.sh
 ```bash
 cd gaze_correction_system
 pip install -r requirements.txt
-pip install cmake dlib
 ```
 
 ### Step 2: Calibrate
@@ -97,7 +98,7 @@ python setup.py            # Install/verify dependencies
 - TensorFlow 2.15+
 - OpenCV 4.8+
 - NumPy 1.24+
-- dlib 19.24+
+- MediaPipe 0.10+
 - Camera (webcam)
 - Display (monitor)
 
@@ -108,11 +109,6 @@ python setup.py            # Install/verify dependencies
 **Camera not working:**
 - Check if camera is connected
 - Try changing camera index in config (`--camera 1`)
-
-**dlib installation fails:**
-- Windows: Install Visual C++ Build Tools
-- Linux: `sudo apt-get install build-essential cmake`
-- macOS: `xcode-select --install`
 
 **No face detected:**
 - Ensure good lighting
@@ -141,7 +137,6 @@ python setup.py            # Install/verify dependencies
     ├── regz_socket_MP_FD.py # Main application
     ├── flx.py              # Neural network model
     ├── transformation.py   # Spatial transformer
-    ├── lm_feat/            # Face landmark model
     └── weights/            # Pre-trained weights
 ```
 

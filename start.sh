@@ -18,11 +18,10 @@ echo "      Python OK"
 
 # Step 2: Install packages if needed
 echo "[2/4] Checking packages..."
-python3 -c "import tensorflow; import cv2; import numpy" 2>/dev/null
+python3 -c "import tensorflow; import cv2; import numpy; import mediapipe" 2>/dev/null
 if [ $? -ne 0 ]; then
     echo "      Installing dependencies (this may take a few minutes)..."
     pip3 install -r "$SCRIPT_DIR/requirements.txt"
-    pip3 install cmake dlib
 fi
 echo "      Packages OK"
 

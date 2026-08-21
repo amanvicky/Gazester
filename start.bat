@@ -24,12 +24,10 @@ echo       Python OK
 
 :: Step 2: Install packages if needed
 echo [2/4] Checking packages...
-python -c "import tensorflow; import cv2; import numpy" >nul 2>&1
+python -c "import tensorflow; import cv2; import numpy; import mediapipe" >nul 2>&1
 if %errorlevel% neq 0 (
     echo       Installing dependencies (this may take a few minutes)...
     pip install -r "%PROJECT_DIR%requirements.txt"
-    pip install cmake
-    pip install dlib
 )
 echo       Packages OK
 

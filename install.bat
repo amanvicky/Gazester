@@ -15,20 +15,11 @@ if %errorlevel% neq 0 (
 )
 
 echo.
-echo [2/3] Installing dlib (may take a few minutes)...
-pip install cmake
-pip install dlib
-if %errorlevel% neq 0 (
-    echo WARNING: dlib installation failed
-    echo You may need Visual C++ Build Tools
-    echo Download from: https://visualstudio.microsoft.com/visual-cpp-build-tools/
-)
+echo [2/3] Verifying installation...
+python -c "import tensorflow, cv2, numpy, mediapipe; print('All packages OK')"
 
 echo.
-echo [3/3] Verifying installation...
-python -c "import tensorflow, cv2, numpy; print('Core packages OK')"
-python -c "import dlib; print('dlib OK')" 2>nul || echo WARNING: dlib not available
-
+echo [3/3] Done!
 echo.
 echo ============================================
 echo Installation complete!
