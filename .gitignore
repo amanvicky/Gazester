@@ -40,6 +40,15 @@ ENV/
 Thumbs.db
 desktop.ini
 
+# TensorFlow
+*.meta
+*.index
+*.data-*
+checkpoint
+
 # Logs
 *.log
 TFboard/
+
+# Freebuff
+.freebuff/

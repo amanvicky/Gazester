@@ -1,72 +1,86 @@
-Correcting gaze by warping-based convolutional neural network.
-# Paper
-@article{Hsu:2019:LMC:3339884.3311784,<br />
-author = {Hsu, Chih-Fan and Wang, Yu-Shuen and Lei, Chin-Laung and Chen, Kuan-Ta},<br />
- title = {Look at Me\\\&Excl; Correcting Eye Gaze in Live Video Communication},<br />
- journal = {ACM Trans. Multimedia Comput. Commun. Appl.},<br />
- issue_date = {June 2019},<br />
- volume = {15},<br />
- number = {2},<br />
- month = jun,<br />
- year = {2019},<br />
- issn = {1551-6857},<br />
- pages = {38:1--38:21},<br />
- articleno = {38},<br />
- numpages = {21},<br />
- url = {[http://doi.acm.org/10.1145/3311784](http://doi.acm.org/10.1145/3311784)},<br />
- doi = {10.1145/3311784},<br />
- acmid = {3311784},<br />
- publisher = {ACM},<br />
- address = {New York, NY, USA},<br />
- keywords = {Eye contact, convolutional neural network, gaze correction, <br />image processing, live video communication},<br />
-} <br />
+# FLX-Gaze: Eye Gaze Correction System
 
-# System usage
-```python
+Real-time eye gaze correction using warping-based convolutional neural network.
+
+## Paper
+
+@article{Hsu:2019:LMC:3339884.3311784,
+author = {Hsu, Chih-Fan and Wang, Yu-Shuen and Lei, Chin-Laung and Chen, Kuan-Ta},
+title = {Look at Me! Correcting Eye Gaze in Live Video Communication},
+journal = {ACM Trans. Multimedia Comput. Commun. Appl.},
+year = {2019},
+doi = {10.1145/3311784}
+}
+
+## Requirements
+
+- Python 3.8+
+- TensorFlow 2.15+
+- OpenCV 4.8+
+- NumPy 1.24+
+- dlib 19.24+
+- scipy 1.10+
+
+## Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+## Usage
+
+### 1. Calibrate Camera
+
+```bash
+cd gaze_correction_system
+python focal_length_calibration.py
+```
+
+Press 'q' to exit. Note the focal length value displayed.
+
+### 2. Configure System
+
+Edit `config.py` and set:
+- `--f`: Your camera's focal length (from calibration)
+- `--P_c_x`, `--P_c_y`, `--P_c_z`: Camera position relative to screen center (cm)
+- `--S_W`, `--S_H`: Screen size (cm)
+- `--tar_ip`: Target IP address (use 127.0.0.1 for self-demo)
+- `--sender_port`, `--recver_port`: Port numbers
+
+### 3. Run System
+
+```bash
+cd gaze_correction_system
 python regz_socket_MP_FD.py
 ```
 
-# Parameters need to be personalized in the "config.py"
-P_o is the original point (0,0,0) which is defined at the center of the screen. <br />
-<br />
-Parameters "P_c_x", "P_c_y", "P_c_z", "S_W", "S_H", and "f" need to be personalized before using the system. <br /> 
-"P_c_x", "P_c_y", and "P_c_z": relative distance between the camera position and screen center (cm) <br />
-"S_W" and "S_H": screen size (cm) <br />
-"f": focal length of camera
+**Controls:**
+- Press 'r' to toggle gaze correction
+- Press 'q' to quit
 
-# Calibrating the focal length of the camera by the attached tools
-Execute the script "focal_length_calibration.ipynb" or "focal_length_calibration.py" to estimated the focal length (f), and the value will be shown at the top-left corner of the window. <br />
-Steps for calibration:<br />
-Step 1, please place your head in front of the camera about 50 cm (you can change this value in the code) <br />
-Step 2, please insert your interpupillary distance (the distance between two eyes) in the code or use the average value, 6.3 cm <br />
+## Project Structure
 
-# Starting to correct gaze! (Self-demo)
-Push 'r' key when focusing the "local" window and gaze your head on the "remote" window to start gaze correction. <br />
-Push 'q' key when focusing the "local" window to leave the program. <br />
-<br />
-*The video will delay at beginning because the TCP socket transmission, nevertheless, the video will be on time after few seconds.
+```
+├── gaze_correction_system/          # Inference system
+│   ├── config.py                    # Configuration
+│   ├── regz_socket_MP_FD.py        # Main application
+│   ├── flx.py                      # Neural network model
+│   ├── tf_utils.py                 # Model utilities
+│   ├── transformation.py           # Spatial transformer
+│   ├── focal_length_calibration.py # Camera calibration
+│   ├── lm_feat/                    # Face landmark model
+│   └── weights/                    # Pre-trained weights
+└── training/                       # Training code
+    └── code_tf/model_train/        # Training scripts
+```
 
-# For online video communication
-The codes at the local and remote sides are the same. However, parameters "tar_ip", "sender_port", and "recver_port" need to be defined at both sides. <br />
-"tar_ip": the other user's IP address <br />
-"sender_port": port # for sending the redirected gaze video to the other user <br />
-"sender_port": port # for getting the redirected gaze video from the other user <br />
+## Technical Details
 
-# IP setup for self-demo
-The codes at the local and remote sides are the same. However, parameters "tar_ip", "sender_port", and "recver_port" need to be defined at both sides. <br />
-"tar_ip": 127.0.0.1 <br />
-"sender_port": 5005 <br />
-"sender_port": 5005 <br />
+- **Model**: FLX-Gaze (249K parameters)
+- **Input**: 48×64 eye image + 12-channel anchor maps + 2D gaze angle
+- **Output**: Gaze-corrected eye image
+- **Architecture**: Encoder → Coarse warping → Fine warping → LCM blending
 
-# Environmental setup
-Python 3.5.3 <br />
-Tensorflow 1.8.0 <br />
-Cuda V9.0.176 and corresponding cuDnn <br />
+## License
 
-# Required packages
-Dlib 18.17.100 <br />
-OpenCV 3.4.1 <br />
-Numpy 1.15.4 + mkl <br />
-pypiwin32 <br />
-scipy 0.19.1 <br />
-
+Research use only. Please cite the paper if you use this code.
